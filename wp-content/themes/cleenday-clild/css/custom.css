@@ -1,0 +1,21 @@
+.tnp-widget input.tnp-submit,.wpforms-submit {
+    text-transform: uppercase;
+    background-color: #ff0712;
+	  font-size: 13px;
+    padding: 20px 38px 17px;
+	  color: #000000;
+}
+li.elementor-icon-list-item {
+    list-style-type: none;
+}
+
+.divPaddingMsg{
+    padding: 0 30px;
+}
+
+#fep-menu-settings,#fep-menu-announcements{
+    display: none !important;
+}
+.fep-table .fep-column-to_user{
+    min-width: 150px;
+}

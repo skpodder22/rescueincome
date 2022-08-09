@@ -1,0 +1,44 @@
+body {
+}
+#mlm-main-div .ioss-mlm-menu label:nth-of-type(3),
+#mlm-main-div .ioss-mlm-menu label:nth-of-type(4),
+#mlm-main-div .ioss-mlm-menu label:nth-of-type(5),
+#mlm-main-div .ioss-mlm-menu label:nth-of-type(6),
+#mlm-main-div .ioss-mlm-menu label:nth-of-type(7)
+{
+    /* display: none; */
+    color: red;
+}
+
+#general-settings .panel-ioss-mlm{
+    display: none;
+    color: red;
+}
+#general-settings .tabble-mode .mlm-users{
+    display: none;
+    color: red;
+}
+#exTab5 ul li:nth-of-type(2),
+#exTab5 ul li:nth-of-type(3){
+    display: none;
+}
+
+.addUserButton{
+    text-align: right;
+    padding: 10px;   
+}
+
+.login .reset-pass-submit .button.skip-aria-expanded{
+    margin: 5px 0px 40px 10px;
+    padding: 10px 10px 10px 10px;
+}
+#wp-submit{
+    margin: 5px 10px 40px 10px !important;
+}
+
+.decision{
+    color: red;
+}
+.mlm-main-div .panel-border{
+     margin-top: 20px !important;
+}
