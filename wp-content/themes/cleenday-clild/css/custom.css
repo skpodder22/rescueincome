@@ -19,3 +19,52 @@ li.elementor-icon-list-item {
 .fep-table .fep-column-to_user{
     min-width: 150px;
 }
+
+
+/*dash board menu**/
+
+
+ul.side-menu-main {
+    list-style: none;
+    margin: 0;
+    padding: 0 0 0 5px;
+	display: flex;
+    flex-wrap: wrap;
+	justify-content: space-between;
+}
+
+ul.side-menu-main li {
+    font-size: 15px;
+    line-height: 1.9;
+	width: 46%;
+    margin: 0 9px;
+}
+
+ul.side-menu-main li a {
+    display: inline-block;
+    padding: 8px 20px;
+    margin: 0 0 10px;
+    border-radius: 5px;
+    background: linear-gradient(to right, #da8cff, #9a55ff);
+    width: 100%;
+	color: #FFFFFF;
+}
+
+ul.side-menu-main li a:hover,
+ul.side-menu-main li a.active {
+	background: linear-gradient(to right, #da8cff, #9a55ff);
+	background: #9a55ff;
+}
+
+
+.side-menu-box {
+    background: #f9f9f9;
+    margin: 10px 0 0;
+    padding: 20px;
+}
+
+@media only screen and (max-width: 991px) {
+	ul.side-menu-main li {
+		width: 100%;
+	}
+}

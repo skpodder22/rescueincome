@@ -1,9 +1,11 @@
 <?php 
-//ini_set('display_errors',1);
+ini_set('display_errors',1);
 require_once get_stylesheet_directory().'/inc/registration.php';
-
 require_once get_stylesheet_directory().'/inc/admin/adminMlm.php';
+#require_once get_stylesheet_directory().'/inc/themeDependency.php';
 
+include 'wpts/wp_theme_settings.php';
+require_once get_stylesheet_directory().'/inc/themeSettings.php';
 function cleenday_child_enqueue_parent_style() {
    
     $theme   = wp_get_theme( 'cleenday' );
@@ -13,6 +15,9 @@ function cleenday_child_enqueue_parent_style() {
     wp_enqueue_script('wp-themeCustomjs',get_stylesheet_directory_uri() . '/js/custom.js' , array( 'jquery' ));
 
     wp_enqueue_script('jquery-ui.min', 'https://code.jquery.com/ui/1.12.1/jquery-ui.min.js' , array( 'jquery' ));
+    
+    wp_enqueue_style( 'jquery-ui-child-min', '//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css', null, $version );
+
     
     // wp_deregister_script( 'fep-script' );
     
@@ -63,7 +68,7 @@ function userRole_update_custom_roles() {
     // 'Editor'
     // 'contributor'
     if ( ! is_admin() ) {
-        add_filter( 'show_admin_bar' , '__return_false' );
+        //add_filter( 'show_admin_bar' , '__return_false' );
     }
 }
 add_action( 'init', 'userRole_update_custom_roles' );
@@ -167,7 +172,7 @@ function directoryQueryUpgrade($arg){
     $parent_id = get_current_user_id();
     $parent_id_arr = array($parent_id);
     $u = wpmlm_get_user_details_by_parent_id_join_new($parent_id_arr);
-//var_dump($u);
+    
     if(!empty($u)){
         $arr = array( 'include' => $u );
         $arg = array_merge($arg,$arr);
@@ -969,6 +974,7 @@ function getUserNameWpmlTable($user_id){
         $login_id = get_current_user_id();
         
         $t = wpmlm_get_user_details_by_id_join($login_id);
+        
         if(!empty($t[0]->user_parent_id)){
             $sponsor_id = $t[0]->user_parent_id;
             //$user_info=get_userdata($sponsor_id);
@@ -980,16 +986,49 @@ function getUserNameWpmlTable($user_id){
             <div class="col-md-12 col-xs-12 col-md-12">
                     <h4><?php _e('Sponsor Details','wpmlm-unilevel'); ?></h4>
                     <p>
-                        <?php  //$user_info->user_login;?>
-                        <?php echo $user_info[0]->user_first_name;?> <?php echo $user_info[0]->user_second_name;?><br>
-                        <span><?php echo $user_info[0]->user_login;?> (<?php echo $user_info[0]->user_email;?>)</span>
+                        <?php 
+                        if(!empty($t[0]->user_parent_id)){
+                            ?>
+                            <?php  //$user_info->user_login;?>
+                            <?php echo $user_info[0]->user_first_name;?> <?php echo $user_info[0]->user_second_name;?><br>
+                            <span><?php echo $user_info[0]->user_login;?> (<?php echo $user_info[0]->user_email;?>)</span>
+                            <?php
+                        }else{
+                            echo 'No sponsor details found.';
+                        }
+                        ?>
+                        
                     </p>
                     <p></p>
             </div>
             <div class="col-sm-5 col-xs-6 col-md-5">
                 <!-- <img src="<?php echo plugins_url() . '/' . WP_MLM_PLUGIN_NAME . '/images/bar-chart.png'; ?>"> -->
             </div>
+            <div class="col-md-12 col-xs-12 col-md-12">
+                    <h4><?php _e('Referral Link','wpmlm-unilevel'); ?></h4>
+                    <?php 
+                        $wp_user_object = new WP_User($login_id);
+                        
+                       $rf = get_site_url().'/affiliate-user-registration/?sname='.base64_encode($wp_user_object->user_login);
+                        ?>
+                    <p><a href="javascript:void(0);" onclick="copyToClipboard('<?php echo $rf;?>')">Click Here</a> to copy the Referrak Link.
+                    
+                        
+                    </p>
+                    <div style=""><?php echo $rf;?></div>
+                    <p></p>
+            </div>
         </div>
+        <script>
+            function copyToClipboard(text) {
+                const elem = document.createElement('textarea');
+                elem.value = text;
+                document.body.appendChild(elem);
+                elem.select();
+                document.execCommand('copy');
+                document.body.removeChild(elem);
+            }
+        </script>
         <?php
         return ob_get_clean();
     }
@@ -1030,3 +1069,114 @@ add_filter('fep_message_table_bulk_actions','removeArchiveFromMsgDropDown');
     //unset($param['Unread']);
     return $param;
  }
+
+
+
+ function pixelvars_loading_inline_style(){
+    ?>
+    <style><?php echo @file_get_contents( get_stylesheet_directory() . '/css/loading.css')?></style>
+    <?php
+  }
+  add_action( 'wp_head', 'pixelvars_loading_inline_style',3 );
+  // add our script.js to wordpress scripts
+  function pixelvars_child_enqueue_scripts() {
+      
+      wp_enqueue_script("pixelvars-loading", trailingslashit( get_stylesheet_directory_uri() ) . "/js/loader.js");
+  }
+  add_action( "wp_enqueue_scripts", "pixelvars_child_enqueue_scripts");
+  // add noscript tag, if javascript is disabled on the browser
+  function pixelvars_add_noscript_filter($tag, $handle, $src){
+      // this filter will run for every enqueued script
+      // we need to check if the handle is equals the script  
+   
+      if ( "pixelvars-loading" === $handle ){
+          $noscript = "<noscript>";
+          $noscript .= "<style>#page-overlay{display: none!important;}</style>";
+          $noscript .= "</noscript>"; 
+          $tag = $tag . $noscript; 
+       } 
+      return $tag; 
+  }
+  add_filter("script_loader_tag", "pixelvars_add_noscript_filter", 10, 3);
+
+  add_filter('login_headerurl','overwriteHeadLink');
+  function overwriteHeadLink($link){
+    $link = get_home_url();
+    return $link;
+  }
+
+
+function selected_tree_admin_footer_function() {
+    //=mlm-admin-settings&tab=tree&=40
+    if(!empty($_GET['page']) && $_GET['tab']=='tree' && !empty($_GET['userid'])){
+    ?>
+    <script>
+        //ioss-mlm-tab3
+        jQuery( document ).ready(function() {
+            jQuery( "#ioss-mlm-tab3" ).trigger( "click" );
+        });
+    </script>
+    <?php 
+    }
+}
+add_action('admin_footer', 'selected_tree_admin_footer_function');
+
+
+
+
+
+
+
+function dashboard_menu_action(){
+    $existing_val = get_option( 'select_input' );
+				if(!empty($existing_val)){
+					$arr = unserialize($existing_val);	
+				}
+    if(!empty($arr)){
+    ?>
+    <div class="col-md-12">
+        <div class="side-menu-box">
+            <ul class="side-menu-main">
+                <?php foreach($arr as $id){
+                    
+                    ?>
+                <li><a href="<?php echo get_permalink( $id );?>" target="__blank"><?php echo get_the_title( $id );?></a></li>
+                <?php }?>
+                
+
+            </ul>
+        </div>
+        </div>
+
+    <?php
+    }
+}
+
+add_action('dashboardMenuArea','dashboard_menu_action');
+
+
+$select_input  = ( ! empty($_POST['option_page']  ) ) ? $_POST['option_page']  : '';
+if($select_input == 'wp_theme_settings-settings-group'){
+    if(!empty($_POST['select_input']) && is_array($_POST['select_input'])){
+        $opt_value = serialize($_POST['select_input']);
+        update_option( 'select_input', $opt_value );
+        
+    }
+}
+		
+function getPageWithCustomQueryAndTranslator(){
+    global $wpdb;
+   
+
+   $sql = "SELECT ".$wpdb->prefix."posts.ID,".$wpdb->prefix."posts.post_title
+    FROM ".$wpdb->prefix."posts
+    LEFT JOIN ".$wpdb->prefix."term_relationships
+    ON (".$wpdb->prefix."posts.ID = ".$wpdb->prefix."term_relationships.object_id)
+    WHERE 1=1
+    AND ".$wpdb->prefix."posts.post_type = 'page'
+    AND ((".$wpdb->prefix."posts.post_status = 'publish'))
+    GROUP BY ".$wpdb->prefix."posts.ID
+    ORDER BY ".$wpdb->prefix."posts.post_date DESC";
+    $page = $wpdb->get_results( $sql,'ARRAY_A' );
+    return $page;
+}

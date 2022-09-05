@@ -42,3 +42,37 @@ body {
 .mlm-main-div .panel-border{
      margin-top: 20px !important;
 }
+
+.user_idtree_selected{
+    text-align: right;
+    padding-right: 40px;
+}
+
+
+
+
+#adminmenumain .input-group {
+    margin: 0 0 37px;
+}
+
+
+
+
+
+#adminmenumain select {
+    margin: 2px 0 10px;
+    border: 1px solid #CCCCCC !important;
+    padding: 12px !important;
+    height: auto !important;
+}
+
+
+
+#adminmenumain #removeRow {
+    background: #e65b5e;
+    border: none !important;
+    padding: 8px 16px 10px;
+    color: #FFFFFF;
+    border-radius: 5px;
+    cursor: pointer;
+}

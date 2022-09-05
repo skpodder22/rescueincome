@@ -43,10 +43,7 @@ function wpmlm_user_dashboard_nnu($user_id) {
     ?>
     
     <div id="general-settings">
-           <div class="panel-border col-md-12" style="margin-top:0;">   
-                    
-
-                         
+           <div class="panel-border col-md-12" style="margin-top:0;">     
                     <?php /*     
                         <div class="panel-border col-md-4 col-sm-4 panel-ioss-mlm">
                                 <div class="col-md-7 col-xs-6 col-md-7">
@@ -79,108 +76,102 @@ function wpmlm_user_dashboard_nnu($user_id) {
                             </div>
                         </div> */
                     ?>
-   
-
-      <div class="panel-border col-md-6" style="padding-left: 0px;padding-top: 11px;">
-         
-            <script>
-            window.onload = function () {
-                var ctx = document.getElementById("myChart");
-                var myChart = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-                        datasets: [{
-                                label: 'Joinings',
-                                lineTension: 0,
-                                data: [<?php echo $joining_count; ?>],
-                                backgroundColor: ['rgba(54, 162, 235, 0.2)'],
-                                borderColor: ['rgba(54, 162, 235, 1)'],
-                                borderWidth: 1
-                            }]
-                    },
-                    options: {
-                        scales: {
-                            yAxes: [{
-                                    ticks: {
-                                        beginAtZero: true
-                                    }
-                                }]
-                        }
-                    }
-                });
-            }
-         </script>
-         <canvas id="myChart" width="400" height="400">
-         </canvas>
-      </div>
-               
-               
-    <div class="panel-border  col-md-6" style="padding-right: 0px;padding-top: 0px !important;">
-                    <div class="panel-border col-md-12" style="margin-top:0">
-                        
-                                <?php echo getSponsorDetails(); ?>
+                    <div class="panel-border col-md-6" style="padding-left: 0px;padding-top: 11px;">
+                        <?php do_action('dashboardMenuArea');?>
+                            <script>
+                                window.onload = function () {
+                                    var ctx = document.getElementById("myChart");
+                                    var myChart = new Chart(ctx, {
+                                        type: 'line',
+                                        data: {
+                                            labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+                                            datasets: [{
+                                                    label: 'Joinings',
+                                                    lineTension: 0,
+                                                    data: [<?php echo $joining_count; ?>],
+                                                    backgroundColor: ['rgba(54, 162, 235, 0.2)'],
+                                                    borderColor: ['rgba(54, 162, 235, 1)'],
+                                                    borderWidth: 1
+                                                }]
+                                        },
+                                        options: {
+                                            scales: {
+                                                yAxes: [{
+                                                        ticks: {
+                                                            beginAtZero: true
+                                                        }
+                                                    }]
+                                            }
+                                        }
+                                    });
+                                }
+                        </script>
+                        <canvas id="myChart" width="400" height="400">
+                        </canvas>
+                    </div>
+                    <div class="panel-border  col-md-6" style="padding-right: 0px;padding-top: 0px !important;">
+                                    <div class="panel-border col-md-12" style="margin-top:0">
+                                        
+                                                <?php echo getSponsorDetails(); ?>
+                                                
+                                    </div>    
+                                <table class="table table-striped table-bordered table-responsive-lg" cellspacing="0" width="100%">
+                                    <thead>
+                                    <caption class="user-table-profile"><?php _e('Recently joined users','wpmlm-unilevel'); ?></caption>
+                                        <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col"><?php _e('Username','wpmlm-unilevel'); ?></th>
+                                        <th scope="col"><?php _e('Fullname','wpmlm-unilevel'); ?></th>
+                                        <th scope="col"><?php _e('Email ID','wpmlm-unilevel'); ?></th>
+                                        </tr>
+                                    </thead>
                                 
-                    </div>    
-                <table class="table table-striped table-bordered table-responsive-lg" cellspacing="0" width="100%">
-                <thead>
-                <caption class="user-table-profile"><?php _e('Recently joined users','wpmlm-unilevel'); ?></caption>
-                    <tr>
-                    <th scope="col">#</th>
-                    <th scope="col"><?php _e('Username','wpmlm-unilevel'); ?></th>
-                    <th scope="col"><?php _e('Fullname','wpmlm-unilevel'); ?></th>
-                    <th scope="col"><?php _e('Email ID','wpmlm-unilevel'); ?></th>
-                    </tr>
-                </thead>
-                
-                <tbody class="panel-body content-class-mode">
-                    
-                        
-                    <?php
-                    $last_joined = wpmlm_get_recently_joined_users_by_parent($user_id,'4');
-                    $jcount = 0;
-                    foreach($last_joined as $lj){
-                        $jcount++;
-                        ?>
-                    <tr>
-                    <th scope="row"><?php echo $jcount;?></th>
-                    <td><?php echo $lj->user_login;?></td>
-                    <td><?php echo $lj->user_first_name.' '.$lj->user_second_name;?> </td>
-                    <td><?php echo $lj->user_email;?> </td>
-                    </tr>
-                    <?php }?>
-                    
-                    
-                    
-                </tbody>
-                </table>
-        <?php /*
-        <div class="mlm-users">
-            <h4 class="usr"><?php _e("Top Bonus Earned Users","wpmlm-unilevel"); ?></h4>
-            
-            <?php 
-            $top_earners = wpmlm_get_total_leg_amount_all_users_under_parent($user_id);
-            if(count($top_earners)==0){
-                echo '<div class="top_earners_div"><p><?php _e("No bonus earned users yet","wpmlm-unilevel"); ?></p><div>';
-            }?>
-            
-            <?php 
-            foreach($top_earners as $te){?>
-                <div class="col-md-4">
-                    <div class="user-list">
-                        <img src="<?php echo plugins_url() . '/' . WP_MLM_PLUGIN_NAME . '/images/avatar.png'; ?>">
-                        <li><h4><?php echo $te->user_first_name;?></h4></li>
-                        <li><?php echo $general->company_currency;?><?php echo $te->total_amount;?></li>
-                    </div>            
-                </div>
-            <?php
-                }
-            ?>
-        </div>
-        */?>
-      </div>           
+                                    <tbody class="panel-body content-class-mode">
+                                        
+                                            
+                                        <?php
+                                        $last_joined = wpmlm_get_recently_joined_users_by_parent($user_id,'4');
+                                        $jcount = 0;
+                                        foreach($last_joined as $lj){
+                                            $jcount++;
+                                            ?>
+                                            <tr>
+                                            <th scope="row"><?php echo $jcount;?></th>
+                                            <td><?php echo $lj->user_login;?></td>
+                                            <td><?php echo $lj->user_first_name.' '.$lj->user_second_name;?> </td>
+                                            <td><?php echo $lj->user_email;?> </td>
+                                            </tr>
+                                        <?php }?>
+                                    
+                                    </tbody>
+                                </table>
+                                <?php /*
+                                <div class="mlm-users">
+                                    <h4 class="usr"><?php _e("Top Bonus Earned Users","wpmlm-unilevel"); ?></h4>
+                                    
+                                    <?php 
+                                    $top_earners = wpmlm_get_total_leg_amount_all_users_under_parent($user_id);
+                                    if(count($top_earners)==0){
+                                        echo '<div class="top_earners_div"><p><?php _e("No bonus earned users yet","wpmlm-unilevel"); ?></p><div>';
+                                    }?>
+                                    
+                                    <?php 
+                                    foreach($top_earners as $te){?>
+                                        <div class="col-md-4">
+                                            <div class="user-list">
+                                                <img src="<?php echo plugins_url() . '/' . WP_MLM_PLUGIN_NAME . '/images/avatar.png'; ?>">
+                                                <li><h4><?php echo $te->user_first_name;?></h4></li>
+                                                <li><?php echo $general->company_currency;?><?php echo $te->total_amount;?></li>
+                                            </div>            
+                                        </div>
+                                    <?php
+                                        }
+                                    ?>
+                                </div>
+                                */?>
+                    </div>           
 
-        </div>
+            </div>
     </div>
     <?php
 }
@@ -217,6 +208,8 @@ function getLableLoop($results,$role,$count,$label){
     global $wpdb;
     $table_prefix = $wpdb->prefix;
 
+    $result_array = json_decode(json_encode($results), true);
+    $ID_array = array_column($result_array, 'ID');
     
     $html = '';
    // ob_start();
@@ -238,25 +231,39 @@ function getLableLoop($results,$role,$count,$label){
                             <td>' . $label . '</td>';
                 $html .=  $action.'</tr>';
                 $parent_id = $res->user_id;
-                
-                $sql = "SELECT a.*,b.* FROM {$table_prefix}users a INNER JOIN {$table_prefix}wpmlm_users b ON a.ID=b.user_ref_id WHERE b.user_parent_id = '" . $parent_id . "' order by b.join_date";
-                
-                $results = $wpdb->get_results($sql);
-                
-                if(!empty($results) && $res->user_id != $res->user_parent_id ){
-                    $label++;
-                    $html .= getLableLoop($results,$role,$count,$label);
+                if( $res->user_id != $res->user_parent_id){
+                    $store_user_ids[] = $res->user_id;
                 }
                   
             }
             
-     return $html;                           
+            if(!empty($ID_array)){
+                $parent_id_string = implode(',',$ID_array);
+                $sql = "SELECT a.*,b.* FROM {$table_prefix}users a INNER JOIN {$table_prefix}wpmlm_users b ON a.ID=b.user_ref_id WHERE b.user_parent_id in( " . $parent_id_string . " ) order by b.join_date";
+                
+                $results = $wpdb->get_results($sql);
+                
+                unset($ID_array);
+                
+                if(!empty($results)  ){
+                    $label++;
+                    return $html.getLableLoop($results,$role,$count,$label);
+                    
+                }else{
+                    return $html;
+                }
+            }else{
+                return $html;
+            }    
+            
+                                
 }
 
 function wpmlm_get_user_details_by_parent_id_join_only_user_id($parent_id) {
     global $wpdb;
     $table_prefix = $wpdb->prefix;
     $sql = "SELECT a.*,b.* FROM {$table_prefix}users a INNER JOIN {$table_prefix}wpmlm_users b ON a.ID=b.user_ref_id WHERE b.user_parent_id = '" . $parent_id . "' order by b.join_date";
+    echo $sql;
     $results = $wpdb->get_results($sql);
 
     return $results;
@@ -265,6 +272,8 @@ function wpmlm_get_user_details_by_parent_id_join_only_user_id($parent_id) {
 function wpmlm_user_referrals_nnu($user_id = '') {
     
     $results = wpmlm_get_user_details_by_parent_id_join($user_id);
+    $results = wpmlm_get_user_details_by_parent_id_join_only_user_id($user_id);
+    //var_dump($results);
     $current_user_id = get_current_user_id();
     $user_info=get_userdata($current_user_id);
     $role = implode(', ', $user_info->roles);
@@ -400,7 +409,7 @@ function wpmlm_user_messaging_nnu($user_id = '') {
     </div> 
     <script>
         jQuery(document).ready(function ($) {
-            $('#user-referrals-table').DataTable({
+            $('#user-referrals-table-re').DataTable({
                 "pageLength": 10,
                 "bFilter": false
             });
@@ -431,10 +440,15 @@ function wpmlm_ajax_user_profile_nnu() {
         $user_second_name = sanitize_text_field($_POST['lname']);
         
         $sponsor_id = sanitize_text_field($_POST['sponsor_id']);
+        $sname = (isset($_POST['sname'])?sanitize_text_field($_POST['sname']):'');
         
         $user_mobile = sanitize_text_field($_POST['contact_no']);
+       
+        
 
         if(!empty($sponsor_id)){
+            // $the_user = get_user_by('login', $sname);
+            // $user_parent_id = $the_user->ID;
             $user_level = wpmlm_get_user_level_by_parent_id($sponsor_id);
         }else{
             $user_level = 0;
@@ -460,6 +474,27 @@ function wpmlm_ajax_user_profile_nnu() {
         $condition = array('user_ref_id' => $user_id);
         $wpdb->update($table_name, $user_details, $condition);
 
+        if(!empty($_FILES['profile_image'])){
+            
+            $file = uploadFile('profile_image', true, true);
+            if($file['error'] == NULL && !empty($file['filename'])){
+                $previous = get_user_meta( $user_id, 'avatar_image_path',true);
+                
+                $up = wp_upload_dir();
+                if(file_exists($up['basedir'].'/'.$previous['file_full_path'])){
+                    unlink($up['basedir'].'/'.$previous['file_full_path']);
+                }
+                $fileP['file_name'] = $file['filename'];
+                $fileP['file_full_path'] = $file['uploads']['subdir'].'/'. $file['filename'];
+                $upload_dir = wp_upload_dir();
+                $file_path = $upload_dir['baseurl'].'/'.$fileP['file_full_path'];
+                $attach_id = add_image_to_media($file_path);
+                $fileP['attach_id'] = $attach_id;
+                update_user_meta( $user_id, 'avatar_image_path',$fileP );
+            }
+            
+        }
+        
         $user_details1 = array(
             'user_email' => $user_email
         );
@@ -481,6 +516,57 @@ function wpmlm_ajax_user_profile_nnu() {
     }
 }
 
+function add_image_to_media($image_url){
+    //$image_url = 'adress img';
+
+    $upload_dir = wp_upload_dir();
+
+    $image_data = file_get_contents( $image_url );
+
+    $filename = basename( $image_url );
+
+    if ( wp_mkdir_p( $upload_dir['path'] ) ) {
+    $file = $upload_dir['path'] . '/' . $filename;
+    }
+    else {
+    $file = $upload_dir['basedir'] . '/' . $filename;
+    }
+
+    file_put_contents( $file, $image_data );
+
+    $wp_filetype = wp_check_filetype( $filename, null );
+
+    $attachment = array(
+    'post_mime_type' => $wp_filetype['type'],
+    'post_title' => sanitize_file_name( $filename ),
+    'post_content' => '',
+    'post_status' => 'inherit'
+    );
+
+    $attach_id = wp_insert_attachment( $attachment, $file );
+    require_once( ABSPATH . 'wp-admin/includes/image.php' );
+    $attach_data = wp_generate_attachment_metadata( $attach_id, $file );
+    wp_update_attachment_metadata( $attach_id, $attach_data );
+
+    return $attach_id;
+}
+add_action( 'wp_ajax_wpmlm_ajax_user_profile_nnu_cpass', 'wpmlm_ajax_user_profile_nnu_cpass' );
+add_action( 'wp_ajax_nopriv_wpmlm_ajax_user_profile_nnu_cpass', 'wpmlm_ajax_user_profile_nnu_cpass' );
+function wpmlm_ajax_user_profile_nnu_cpass() {
+    global $wpdb;
+    $table_name = $wpdb->prefix . "wpmlm_users";
+    $table_name1 = $wpdb->prefix . "users";
+    $user_id = intval($_POST['user_id']);
+
+    if (isset($_POST['user_form4_admin_nonce']) && wp_verify_nonce($_POST['user_form4_admin_nonce'], 'user_form4_admin')) {
+
+        $newpassword = $_POST['password_admin'];
+        wp_set_password($newpassword, $user_id);
+        //echo 'Password Updated Successfully';
+        _e("Password Updated Successfully","wpmlm-unilevel");
+        exit();
+    }
+}
 add_action( 'wp_ajax_wpmlm_ajax_add_user_profile_nnu', 'wpmlm_ajax_add_user_profile_nnu' );
 add_action( 'wp_ajax_nopriv_wpmlm_ajax_add_user_profile_nnu', 'wpmlm_ajax_add_user_profile_nnu' );
 function wpmlm_ajax_add_user_profile_nnu() {
@@ -594,7 +680,10 @@ function wpmlm_add_user_profile_admin_nnu() {
     // $date = strtotime($results1[0]->join_date);
     // $joining_date = date('Y-m-d', $date);    
     // $package_details = wpmlm_select_package_by_id($results[0]->package_id);
+    $user = wp_get_current_user();
+    $user_id = $user->ID;
     ?>
+    <?php  wp_enqueue_media(); ?>
     <div id="user-profile">
     <div class="panel panel-default">
         <div class="panel-heading">
@@ -619,6 +708,7 @@ function wpmlm_add_user_profile_admin_nnu() {
                                             <select   name="sponsor_id" id="sponsor_id" style=" width:100%; background-color: #fff" >
                                                 <?php
                                                 $country_results = wpmlm_getSponsor($user_id);
+                                                echo '<option value="0">Select Sponsor</option>';
                                                 foreach ($country_results as $res) {
                                                     if (0 == $res->ID) {
                                                         $selected = 'selected';
@@ -661,6 +751,10 @@ function wpmlm_add_user_profile_admin_nnu() {
                                         <input type="text" class="user-input" name="lname" id="lname" value=""  style="border: none;">
                                     </div>
                                 </div>
+                                
+                                
+
+
                                 <div class="form-group" style="margin-bottom: 10px;">
                                     <label class="control-label col-md-3 user-dt" for="address1"><?php _e('Address 1','wpmlm-unilevel'); ?>:</label>
                                     <div class="col-md-7">
@@ -985,6 +1079,8 @@ function wpmlm_add_user_profile_admin_nnu() {
                 }
 
                 if (isValid) {
+                    $('#page-overlay').attr('class','loading'); 
+                    $('#page-overlay').css('visibility','visible'); 
                     $.ajax({
                         type: "POST",
                         url: ajaxurl,
@@ -995,6 +1091,8 @@ function wpmlm_add_user_profile_admin_nnu() {
                         success: function (data) {
                             //alert(data);
                             console.log({data:data});
+                            $('#page-overlay').attr('class','loaded'); 
+                            $('#page-overlay').css('visibility','hidden'); 
                             $("#user-form3-message").show();
                             $("#user-form3-message").html('<div class="alert alert-info">' + data + '</div>');
                             setTimeout(function () {
@@ -1070,15 +1168,166 @@ function wpmlm_add_user_profile_admin_nnu() {
     </script>
     <?php
 }
+
+function uploadFile ($file_field = null, $check_image = false, $random_name = false) {
+
+        //Config Section    
+        //Set file upload path
+        $uploads = wp_upload_dir();
+        $path = $uploads['path'].'/'; 
+        //$path = 'uploads/'; //with trailing slash
+        //Set max file size in bytes
+        $max_size = 1000000;
+        //Set default file extension whitelist
+        $whitelist_ext = array('jpeg','jpg','png','gif');
+        //Set default file type whitelist
+        $whitelist_type = array('image/jpeg', 'image/jpg', 'image/png','image/gif');
+        
+        //The Validation
+        // Create an array to hold any output
+        $out = array('error'=>null);
+        $out['uploads'] = $uploads;
+        if (!$file_field) {
+        $out['error'][] = "Please specify a valid form field name";           
+        }
+        
+        if (!$path) {
+        $out['error'][] = "Please specify a valid upload path";               
+        }
+        
+        if (is_array($out['error']) && count($out['error'])>0) {
+        return $out;
+        }
+    
+    //Make sure that there is a file
+        if((!empty($_FILES[$file_field])) && ($_FILES[$file_field]['error'] == 0)) {
+    
+            // Get filename
+            $file_info = pathinfo($_FILES[$file_field]['name']);
+            $name = $file_info['filename'];
+            $ext = $file_info['extension'];
+            
+            //Check file has the right extension           
+            if (!in_array($ext, $whitelist_ext)) {
+                $out['error'][] = "Invalid file Extension";
+            }
+        
+            //Check that the file is of the right type
+            if (!in_array($_FILES[$file_field]["type"], $whitelist_type)) {
+                $out['error'][] = "Invalid file Type";
+            }
+            
+            //Check that the file is not too big
+            if ($_FILES[$file_field]["size"] > $max_size) {
+                $out['error'][] = "File is too big";
+            }
+        
+            //If $check image is set as true
+            if ($check_image) {
+                if (!getimagesize($_FILES[$file_field]['tmp_name'])) {
+                    $out['error'][] = "Uploaded file is not a valid image";
+                }
+            }
+        
+            //Create full filename including path
+            if ($random_name) {
+                // Generate random filename
+                $tmp = str_replace(array('.',' '), array('',''), microtime());
+                
+                if (!$tmp || $tmp == '') {
+                    $out['error'][] = "File must have a name";
+                }     
+                $newname = $tmp.'.'.$ext;                                
+            } else {
+                $newname = $name.'.'.$ext;
+            }
+        
+            //Check if file already exists on server
+            if (file_exists($path.$newname)) {
+                $out['error'][] = "A file with this name already exists";
+            }
+        
+            if (count($out['error'])>0) {
+                //The file has not correctly validated
+                return $out;
+            } 
+        
+            if (move_uploaded_file($_FILES[$file_field]['tmp_name'], $path.$newname)) {
+                //Success
+                $out['filepath'] = $path;
+                $out['filename'] = $newname;
+                return $out;
+            } else {
+                $out['error'][] = "Server Error!";
+            }
+    
+        } else {
+            $out['error'][] = "No file uploaded";
+            return $out;
+        }      
+}
+    
+    
+    
+
 function wpmlm_user_profile_admin_nnu($user_id = '') {
     $results = wpmlm_get_user_details_by_id_join($user_id);
     $results1 = wpmlm_get_user_details_by_id_join($results[0]->user_parent_id);
+    
     $date = strtotime($results1[0]->join_date);
-    $joining_date = date('Y-m-d', $date);    
+    if(!empty($date)){
+        $joining_date = date('Y-m-d', $date);
+    }else if(!empty($results[0]->user_registered)){
+        $date = strtotime($results1[0]->user_registered);
+        $joining_date = date('Y-m-d', $date);
+    }else{
+        $joining_date = '';
+    }
+        
     $package_details = wpmlm_select_package_by_id($results[0]->package_id);
+    // add_thickbox();
+    // wp_enqueue_script( 'media-upload' );
+    // wp_enqueue_media();
     ?>
+    
+    <script type="text/javascript">
+    jQuery(document).ready(function($){
+        var custom_uploader;
+        $('#upload_image_button').click(function(e) {
+ 
+            e.preventDefault();
+ 
+            //If the uploader object has already been created, reopen the dialog
+            if (custom_uploader) {
+                custom_uploader.open();
+                return;
+            }
+ 
+            //Extend the wp.media object
+            custom_uploader = wp.media.frames.file_frame = wp.media({
+                title: 'Choose Image',
+                button: {
+                    text: 'Choose Image'
+                },
+                multiple: false
+            });
+ 
+            //When a file is selected, grab the URL and set it as the text field's value
+            custom_uploader.on('select', function() {
+                attachment = custom_uploader.state().get('selection').first().toJSON();
+                $('#upload_image').val(attachment.id);
+                $('#image').attr('src', attachment.url);
+            });
+ 
+            //Open the uploader dialog
+            custom_uploader.open();
+ 
+        });
+ 
+    });
+    </script>
     <div id="user-profile">
-    <div class="panel panel-default">
+    <div class="panel panel-default" data-status="<?php echo $results[0]->user_status;?>">
         <div class="panel-heading">
          <h4><i class="fa fa-info-circle"></i> <span class="report-caption"> <?php _e('User Profile','wpmlm-unilevel'); ?></span></h4>         
       </div>
@@ -1122,17 +1371,17 @@ function wpmlm_user_profile_admin_nnu($user_id = '') {
     <h4><?php _e('Personal Information','wpmlm-unilevel'); ?></h4>
 
                <div id="user-form3-div">
-                  <form id="user-form3-nnu" class="form-horizontal" method="post">
-                      <div class="form-group">
-                   <label class="control-label col-md-3 user-dt" for=""></label>
+                  <form id="user-form3-nnu" class="form-horizontal" method="post" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label class="control-label col-md-3 user-dt" for=""></label>
 
-                     <div class=" col-md-7">
-                        <a class="btn btn-danger user-form3-edit">
-                            <i class="fa fa-edit"></i>&nbsp;<?php _e('Edit','wpmlm-unilevel'); ?>
-                        </a>
+                        <div class=" col-md-7">
+                            <a class="btn btn-danger user-form3-edit">
+                                <i class="fa fa-edit"></i>&nbsp;<?php _e('Edit','wpmlm-unilevel'); ?>
+                            </a>
 
+                        </div>
                     </div>
-                  </div>
 
                         <div class="form-group">
                             <label class="control-label col-md-3 user-dt" for="package_price"><?php _e('Sponsor Name','wpmlm-unilevel'); ?>:</label>
@@ -1146,6 +1395,7 @@ function wpmlm_user_profile_admin_nnu($user_id = '') {
                                         ?>
                                  <select   name="sponsor_id" id="sponsor_id" style="display:none; width:100%; background-color: #fff" >
                                         <?php
+                                        echo '<option value="0">Select Sponsor</option>';
                                         foreach ($country_results as $res) {
                                             if ($results[0]->user_parent_id == $res->ID) {
                                                 $selected = 'selected';
@@ -1173,6 +1423,9 @@ function wpmlm_user_profile_admin_nnu($user_id = '') {
                                             }
                                         }
                                         ?>
+                                        
+                                    <input type="hidden" name="sponsor_id"  value="<?php echo $results[0]->user_parent_id;?>" />
+
                                     <input type="text"  value="<?php echo $sponsor_id_temp; ?>" readonly disabled style="border: none;">
                                     <?php
                                 }
@@ -1188,24 +1441,41 @@ function wpmlm_user_profile_admin_nnu($user_id = '') {
                         <div class="form-group">
                             <label class="control-label col-md-3 user-dt" for="joining_date"><?php _e('Joining Date','wpmlm-unilevel'); ?>:</label>
                             <div class="col-md-7">
-                                <input type="text" class="date-picker" data-date-format="yyyy-mm-dd" data-date-viewmode="years" name="joining_date" id="joining_date" value="<?php echo $joining_date; ?>" readonly style="border: none;">
+                            
+                                <input type="text" class="<?php echo (is_admin()?'date-picker':'');?>" data-date-format="yyyy-mm-dd" data-date-viewmode="years" <?php echo (is_admin()?'name="joining_date" id="joining_date"':'disabled');?>  value="<?php echo $joining_date; ?>" readonly style="border: none;">
                             </div>
                         </div>
-                        <?php 
-                        if($package_details){?>
+                        <div class="form-group" style="margin-bottom: 10px;">
+                                    <label class="control-label col-md-3 user-dt" for="image"><?php _e('Profile Image','wpmlm-unilevel'); ?>:</label>
+                                    <div class="col-md-7">
+                                        <?php 
+                                        $previous = get_user_meta($user_id,'avatar_image_path',true);
+                                        $up = wp_upload_dir();
+                                        
+                                        if(isset($previous['file_full_path']) && file_exists($up['basedir'].'/'.$previous['file_full_path'])){
+
+                                        ?>
+                                        <img src="<?php echo $up['baseurl'].$previous['file_full_path'];?>" id="image"  style="height:100px;"/>
+                                        <?php }?>
+                                        
+                                        <input  type="file" name="profile_image" value="Upload Image" />
+                                    </div>
+                                </div>
+                            <?php 
+                            if($package_details){?>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 user-dt" for="registration_package"><?php _e('Registration Package','wpmlm-unilevel'); ?> :</label>
+                                    <div class="col-md-7">
+                                        <input type="text" class="" name="registration_package" id="registration_package" value="<?php echo $package_details->package_name; ?>" readonly style="border: none;">
+                                    </div>
+                                </div>
+                            <?php }?>
                             <div class="form-group">
-                                <label class="control-label col-md-3 user-dt" for="registration_package"><?php _e('Registration Package','wpmlm-unilevel'); ?> :</label>
+                                <label class="control-label col-md-3 user-dt" for="fname"><?php _e('First Name','wpmlm-unilevel'); ?>:</label>
                                 <div class="col-md-7">
-                                    <input type="text" class="" name="registration_package" id="registration_package" value="<?php echo $package_details->package_name; ?>" readonly style="border: none;">
+                                    <input type="text" class="user-input" name="fname" id="fname" value="<?php echo $results[0]->user_first_name; ?>" readonly style="border: none;" >
                                 </div>
                             </div>
-                        <?php }?>
-                        <div class="form-group">
-                            <label class="control-label col-md-3 user-dt" for="fname"><?php _e('First Name','wpmlm-unilevel'); ?>:</label>
-                            <div class="col-md-7">
-                                <input type="text" class="user-input" name="fname" id="fname" value="<?php echo $results[0]->user_first_name; ?>" readonly style="border: none;" >
-                            </div>
-                        </div>
                         <div class="form-group">
                             <label class="control-label col-md-3 user-dt" for="lname"><?php _e('Last Name','wpmlm-unilevel'); ?>:</label>
                             <div class="col-md-7">
@@ -1404,6 +1674,8 @@ function wpmlm_user_profile_admin_nnu($user_id = '') {
                 }
 
                 if (isValid) {
+                    $('#page-overlay').attr('class','loading'); 
+                    $('#page-overlay').css('visibility','visible'); 
                     $.ajax({
                         type: "POST",
                         url: ajaxurl,
@@ -1414,6 +1686,8 @@ function wpmlm_user_profile_admin_nnu($user_id = '') {
                         success: function (data) {
                             //alert(data);
                             console.log({data:data});
+                            $('#page-overlay').attr('class','loaded'); 
+                            $('#page-overlay').css('visibility','hidden'); 
                             $("#user-form3-message").show();
                             $("#user-form3-message").html('<div class="alert alert-info">' + data + '</div>');
                             setTimeout(function () {
@@ -1430,7 +1704,7 @@ function wpmlm_user_profile_admin_nnu($user_id = '') {
 
             $(document).on('submit', '#user-form4', function () {
                 var formData = new FormData(this);
-                formData.append('action', 'wpmlm_ajax_user_profile_nnu');
+                formData.append('action', 'wpmlm_ajax_user_profile_nnu_cpass');
                 isValid = true;
                 $(".user-password-input").each(function () {
                     var element = $(this);
@@ -1452,6 +1726,8 @@ function wpmlm_user_profile_admin_nnu($user_id = '') {
                 }
                 
                 if (isValid) {
+                    
+                    $("#user_form4_save").attr('disabled','disabled');
                     $.ajax({
                         type: "POST",
                         url: ajaxurl,
@@ -1467,7 +1743,7 @@ function wpmlm_user_profile_admin_nnu($user_id = '') {
                             $("#user-form4-message").html('<div class="alert alert-info">' + data + '</div>');
                             setTimeout(function () {
                                 $("#user-form4-message").hide();
-                            }, 1000);
+                            }, 4000);
 
                         }
 
@@ -1489,7 +1765,23 @@ function wpmlm_user_profile_admin_nnu($user_id = '') {
     </script>
     <?php
 }
+///add_filter( 'avatar_defaults', 'set_customgravatar' );
 
+function set_customgravatar ($avatar_defaults) {
+    $user = wp_get_current_user();
+    $user_id = $user->ID;
+    $previous = get_user_meta($user_id,'avatar_image_path',true);
+    $up = wp_upload_dir();
+
+    if(isset($previous['file_full_path']) && file_exists($up['basedir'].'/'.$previous['file_full_path'])){
+        $myavatar = $up['basedir'].'/'.$previous['file_full_path'];
+        $avatar_defaults[$myavatar] = "";
+      
+        return $avatar_defaults;
+    }else{
+        return $avatar_defaults;
+    }
+}
 add_action( 'wp_ajax_wpmlm_ajax_user_details_nnu', 'wpmlm_ajax_user_details_nnu' );
 add_action( 'wp_ajax_nopriv_wpmlm_ajax_user_details_nnu', 'wpmlm_ajax_user_details_nnu' );
 function wpmlm_ajax_user_details_nnu() {
@@ -1510,7 +1802,7 @@ function wpmlm_ajax_user_details_nnu() {
                     <li class="active"><a  href="#1c" data-toggle="tab"><?php _e('User Profile','wpmlm-unilevel'); ?></a></li>
                     <li><a href="#2c" data-toggle="tab"><?php _e('E-wallet Details','wpmlm-unilevel'); ?></a></li>
                     <li><a href="#3c" data-toggle="tab"><?php _e('Bonus Details','wpmlm-unilevel'); ?></a></li>
-                    <li><a href="#4c" data-toggle="tab"><?php _e('Referral Details','wpmlm-unilevel'); ?></a></li>
+                    <li><a href="#4c" data-toggle="tab"><?php _e('Child Details','wpmlm-unilevel'); ?></a></li>
                     
                 </ul>
             </div>
@@ -1644,9 +1936,14 @@ function wpmlm_user_details_admin_nnu() {
                         echo '<tr>
                                 <th scope="row">' . $p_count . '</th>
                                 <td>' . $res->user_login . '</td>
-                                <td>' . $res->user_first_name . ' ' . $res->user_second_name . '</td>
-                                <td>' . date("Y/m/d", strtotime($res->join_date)).'</td>
-                                <td class="sponsor">' .($res->user_parent_id !=0 ?getUserNameWpmlTable($res->user_parent_id):''). '</td>
+                                <td>' . $res->user_first_name . ' ' . $res->user_second_name . '</td>';
+                                if(!empty(strtotime($res->join_date))){
+                                    echo '<td>' . date("Y/m/d", strtotime($res->join_date)).'</td>';
+                                }else{
+                                    echo '<td></td>';
+                                }
+                                
+                                echo '<td class="sponsor">' .($res->user_parent_id !=0 ?getUserNameWpmlTable($res->user_parent_id):''). '</td>
                                 <td>
                                     <button type="button" class="btn btn-default btn-sm user_view_nnu" edit-id="' . $res->ID . '">';?>
                                     <?php _e("View details","wpmlm-unilevel"). '</button>
@@ -1734,7 +2031,32 @@ function wpmlm_admin_area_nnu() {
           
         <section id="content1"><p><?php echo wpmlm_admin_dashboard($user_id); ?></p></section>      
         <section id="content2"><p><?php echo wpmlm_user_details_admin_nnu(); ?></p></section>      
-        <section id="content3" ><p><?php echo wpmlm_unilevel_tree($user_id); ?></p></section>      
+        <section id="content3" ><p>
+            <div class="user_idtree_selected" data-url="<?php echo get_site_url(); ?>/wp-admin/admin.php?page=mlm-admin-settings">
+                Selected Top User : <?php 
+                $results = wpmlm_get_all_user_details_join();
+                $selected = isset($_GET['userid'])?$_GET['userid']:'';
+                ?>
+                <select name="user_id_tree" id="user_id_tree">
+                    <option value="">Selecte User</option>
+                    <?php 
+                    foreach($results as $user){
+                    ?>
+                    <option value="<?php echo $user->ID;?>" <?php echo ($selected==$user->ID?'selected':'')?>><?php echo $user->user_login?></option>    
+                    <?php 
+                    } 
+                    ?>
+                    
+                </select>
+            </div>
+            <?php 
+            if(empty($selected)){
+                echo wpmlm_unilevel_tree($user_id);
+            }else{
+                echo wpmlm_unilevel_tree($selected);
+            }
+             ?>
+        </p></section>      
         <section id="content4"><p><?php echo wpmlm_ewallet_management(); ?></p></section>    
         <section id="content5"><p><?php echo wpmlm_all_reports(); ?></p></section>
         <section id="content6"><p><?php echo wpmlm_password_settings(); ?></p></section>
@@ -1751,8 +2073,9 @@ function wpmlm_user_area_nnu() {
     $parent_id = $user_details->user_parent_id;
     $package_id = $user_details->package_id;
     $user_status = $user_details->user_status;
+    //&& ($user_status == 1)
     
-    if ($user_id && ($user_status == 1)) {
+    if ($user_id ) {
         echo '<div class="col-md-12 mlm-main-div" id="mlm-main-div"> ';
 
         if (isset($_GET['reg_status'])) {
@@ -1760,7 +2083,7 @@ function wpmlm_user_area_nnu() {
             echo '<div class="panel-border"><div class="col-md-8 status-msg alert alert-success alert-dismissible text-center"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><b>' . base64_decode($_GET['reg_status']) . '</b></div></div>';
             ?>
 
-            <h3 class="mlm-title"><?php _e('WP MLM User','wpmlm-unilevel'); ?></h3>
+            <h3 class="mlm-title"><?php //_e('WP MLM User','wpmlm-unilevel'); ?></h3>
             <div class="ioss-mlm-menu">
                 <input id="ioss-mlm-tab6" class="tab_class" type="radio" name="tabs" checked>
                 <label class="tab_class" for="ioss-mlm-tab6"><?php _e('Dashboard','wpmlm-unilevel'); ?></label>
@@ -1789,7 +2112,7 @@ function wpmlm_user_area_nnu() {
             <?php
         } else if (isset($_GET['reg_failed'])) {
             ?>
-                    <h3 class="mlm-title"><?php _e('WP MLM User Registration','wpmlm-unilevel'); ?></h3>
+                    <h3 class="mlm-title"><?php _e('User Registration','wpmlm-unilevel'); ?></h3>
                     <?php
                     echo '<div class="panel-border"><div class="col-md-8 status-msg alert alert-danger text-center"><b>' . base64_decode($_GET['reg_failed']) . '</b>
             </div></div>';
@@ -1797,16 +2120,16 @@ function wpmlm_user_area_nnu() {
 
             ?>
             
-            <h3><?php _e('WP MLM User','wpmlm-unilevel'); ?></h3>
+            <h3><?php //_e('WP MLM User','wpmlm-unilevel'); ?></h3>
             <div class="ioss-mlm-menu">
                 <input id="ioss-mlm-tab6" class="tab_class" type="radio" name="tabs" checked>
                 <label class="tab_class" for="ioss-mlm-tab6"><?php _e('Dashboard','wpmlm-unilevel'); ?></label>
                 <input id="ioss-mlm-tab1" class="tab_class" type="radio" name="tabs">
                 <label class="tab_class" for="ioss-mlm-tab1"><?php _e('My Profile','wpmlm-unilevel'); ?></label>      
                 <input id="ioss-mlm-tab2" class="tab_class tree-tab-user" type="radio" name="tabs">
-                <!-- <label class="tab_class" for="ioss-mlm-tab2"><?php _e('Genealogy Tree','wpmlm-unilevel'); ?></label>    
+                 <label class="tab_class" for="ioss-mlm-tab2"><?php _e('Members Tree','wpmlm-unilevel'); ?></label>    
                 <input id="ioss-mlm-tab3" class="tab_class ewallet-tab-user" type="radio" name="tabs">
-                <label class="tab_class" for="ioss-mlm-tab3"><?php _e('E-wallet Management','wpmlm-unilevel'); ?></label>      
+               <!-- <label class="tab_class" for="ioss-mlm-tab3"><?php _e('E-wallet Management','wpmlm-unilevel'); ?></label>      
                 <input id="ioss-mlm-tab4" class="tab_class" type="radio" name="tabs">
                 <label class="tab_class" for="ioss-mlm-tab4"><?php _e('Bonus Details','wpmlm-unilevel'); ?></label> -->
                 <input id="ioss-mlm-tab5" class="tab_class" type="radio" name="tabs">
@@ -1814,7 +2137,10 @@ function wpmlm_user_area_nnu() {
 
                 <input id="ioss-mlm-tab7" class="tab_class" type="radio" name="tabs">
                 <label class="tab_class" for="ioss-mlm-tab7"><?php _e('Inbox','wpmlm-unilevel'); ?></label>
-                
+                <label class="tab_class" for=""><?php 
+                $current_user = wp_get_current_user();
+                _e('Login as : ','wpmlm-unilevel');
+                echo $current_user->user_login; ?></label>
 
 
                 <section id="content1"><p><?php echo wpmlm_user_profile_admin_nnu($user_id); ?></p></section>  
@@ -1822,7 +2148,9 @@ function wpmlm_user_area_nnu() {
                 <section id="content2" ><p><?php echo wpmlm_unilevel_tree($user_id); ?></p></section> 
                 <section id="content3"><p><?php echo wpmlm_user_ewallet_management(); ?></p></section>
                 <section id="content4"><p><?php echo wpmlm_user_income_details($user_id); ?></p></section>
-                <section id="content5"><p><?php echo wpmlm_user_referrals_nnu($user_id); ?></p></section>
+                <section id="content5" class="wpmlm_user_referrals_nnu"><p>
+                       
+                <?php echo wpmlm_user_referrals_nnu($user_id); ?></p></section>
                 <section id="content6"><p><?php echo wpmlm_user_dashboard_nnu($user_id); ?></p></section> 
                 <section id="content7"><p><?php echo wpmlm_user_messaging_nnu($user_id); ?></p></section> 
                  
@@ -1908,3 +2236,127 @@ function custom_wpmlm_ajax_user_check($field = 'username',$field_value) {
     }
 }
 
+/**Default Avatar**/
+
+
+
+function wp_gravatar_filter($avatar, $id_or_email, $size, $default, $alt) {
+    $custom_avatar =  get_the_author_meta('avatar_image_path',$id_or_email);
+
+   //$custom_avatar = get_user_meta($id_or_email,'avatar_image_path',true);
+
+    if ($custom_avatar)
+        $return = get_wp_user_avatar_image($id_or_email, $size, $default, $alt);
+    elseif ($avatar)
+        $return = $avatar;
+    else
+        $return = '<img src="'.$default.'" width="'.$size.'" height="'.$size.'" alt="'.$alt.'" />';
+    
+   
+    return $return;
+}
+ 
+add_filter('get_avatar', 'wp_gravatar_filter', 10, 5);
+ 
+ 
+// Find avatar, show get_avatar if empty
+function get_wp_user_avatar_image($id_or_email="", $size='96', $align="", $alt="", $email='unknown@gravatar.com'){
+ 
+    global $avatar_default, $blog_id, $post, $wpdb, $_wp_additional_image_sizes;
+    // Checks if comment
+    if(is_object($id_or_email)){
+        // Checks if comment author is registered user by user ID
+        if($id_or_email->user_id != 0){
+            $email = $id_or_email->user_id;
+            // Checks that comment author isn't anonymous
+        } elseif(!empty($id_or_email->comment_author_email)){
+            // Checks if comment author is registered user by e-mail address
+            $user = get_user_by('email', $id_or_email->comment_author_email);
+            // Get registered user info from profile, otherwise e-mail address should be value
+            $email = !empty($user) ? $user->ID : $id_or_email->comment_author_email;
+        }
+ 
+        $alt = $id_or_email->comment_author;
+    } else {
+ 
+        if(!empty($id_or_email)){
+            // Find user by ID or e-mail address
+            $user = is_numeric($id_or_email) ? get_user_by('id', $id_or_email) : get_user_by('email', $id_or_email);
+        } else {
+            // Find author's name if id_or_email is empty
+            $author_name = get_query_var('author_name');
+            if(is_author()){
+                // On author page, get user by page slug
+                $user = get_user_by('slug', $author_name);
+            } else {
+                // On post, get user by author meta
+                $user_id = get_the_author_meta('ID');
+                $user = get_user_by('id', $user_id);
+            }
+        }
+ 
+        // Set user's ID and name
+        if(!empty($user)){
+            $email = $user->ID;
+            $alt = $user->display_name;
+        }
+    }
+ 
+    // Checks if user has avatar
+    $wpua_meta = get_the_author_meta($wpdb->get_blog_prefix($blog_id).'user_avatar', $email);
+    $awpua_meta = get_the_author_meta('avatar_image_path',$email);
+ 
+    // Add alignment class
+    $alignclass = !empty($align) && ($align == 'left' || $align == 'right' || $align == 'center') ? ' align'.$align : ' alignnone';
+ 
+    // User has avatar, bypass get_avatar
+   
+   
+    $up = wp_upload_dir();
+    
+    $wpua_meta = $up['baseurl'].$awpua_meta['file_full_path'];
+
+    
+    $wpua_meta = $awpua_meta['attach_id'];
+    if(!empty($wpua_meta)){
+        // Numeric size use size array
+        $get_size = is_numeric($size) ? array($size,$size) : $size;
+        // Get image src
+        $wpua_image = wp_get_attachment_image_src($wpua_meta, $get_size);
+        
+        $dimensions = is_numeric($size) ? ' width="'.$wpua_image[1].'" height="'.$wpua_image[2].'"' : "";
+        // Construct the img tag
+ 
+        $avatar = '<img src="'.$wpua_image[0].'"'.$dimensions.' alt="'.$alt.'" />';
+    } else {
+        // Get numeric sizes for non-numeric sizes based on media options
+        if(!function_exists('get_intermediate_image_sizes')){
+            require_once(ABSPATH.'wp-admin/includes/media.php');
+        }
+        // Check for custom image sizes
+        $all_sizes = array_merge(get_intermediate_image_sizes(), array('original'));
+        if(in_array($size, $all_sizes)){
+            if(in_array($size, array('original', 'large', 'medium', 'thumbnail'))){
+                $get_size = ($size == 'original') ? get_option('large_size_w') : get_option($size.'_size_w');
+            } else {
+                $get_size = $_wp_additional_image_sizes[$size]['width'];
+            }
+        } else {
+            // Numeric sizes leave as-is
+            $get_size = $size;
+        }
+         
+        // User with no avatar uses get_avatar
+        $avatar = get_avatar($email, $get_size, $default="", $alt="");
+        // Remove width and height for non-numeric sizes
+        if(in_array($size, array('original', 'large', 'medium', 'thumbnail'))){
+            $avatar = preg_replace('/(width|height)="d*"s/', "", $avatar);
+            $avatar = preg_replace("/(width|height)='d*'s/", "", $avatar);
+        }
+        $str_replacemes = array('wp-user-avatar ', 'wp-user-avatar-'.$get_size.' ', 'wp-user-avatar-'.$size.' ', 'avatar-'.$get_size, 'photo');
+        $str_replacements = array("", "", "", 'avatar-'.$size, 'wp-user-avatar wp-user-avatar-'.$size.$alignclass.' photo');
+ 
+        $avatar = str_replace($str_replacemes, $str_replacements, $avatar);
+    }
+    return $avatar;
+}

@@ -1,0 +1,86 @@
+/*
+ initialize rotation key frames,  
+*/
+@keyframes kf_spinner {
+    to {
+        transform: rotate(360deg)
+    }
+}
+/*
+The page overlay DIV, you can style it as you like, 
+*/
+#page-overlay {
+    /*
+    basic styles
+    */
+    text-align: center;
+    color: #1e73be;
+    padding-top: 10px;
+    font-size: .7em;
+    display: block;
+    background-color: #fefefe;
+    
+    /*
+    important to work properly
+    */
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 999999999999;/* highest top level layer */
+    
+    /*
+    required for fade-out/fade-in animation effect
+    */
+    -webkit-transition: opacity 1s ease-in-out;
+    -moz-transition: opacity 1s ease-in-out;
+    -ms-transition: opacity 1s ease-in-out;
+    -o-transition: opacity 1s ease-in-out
+}
+/*
+show our loading layer
+*/
+#page-overlay.loading {
+    opacity: 1;
+    visibility: visible
+}
+/*
+hide our loading layer
+*/
+#page-overlay.loaded,
+#page-overlay>span {
+    opacity: 0
+}
+/*
+create the animated spinner
+*/
+#page-overlay.loading:before {
+    /*
+    required to work
+    */
+    content: '';
+    box-sizing: border-box;
+    position: absolute;
+/*
+    centering the spinner on the page
+    */
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin-top: -10px;
+    margin-left: -10px;
+    border-radius: 50%;
+/*
+    create the spinner with css, no image required :)
+    */
+    border-top: 2px solid #1e73be;
+    border-right: 2px solid transparent;
+/*
+    animate the spinner
+    */
+    animation: kf_spinner .6s linear infinite
+}

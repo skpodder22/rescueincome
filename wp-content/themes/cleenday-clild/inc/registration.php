@@ -12,6 +12,11 @@ if(!in_array($_SERVER['REMOTE_ADDR'], $whitelist)){
 
 function wpmlm_registration_page_shortcode_new() {
     
+    if(!empty(get_current_user_id())){
+        wp_redirect( home_url('/affiliate-user-dashboard/') ); exit;
+    }
+
+
     wp_enqueue_style('wp-mlm-datepicker', plugin_dir_url('').'wp-mlm/css/datepicker.css' );
     wp_enqueue_style('wp-mlm-custom-style', plugin_dir_url('').'wp-mlm/css/custom-style.css' );
 
@@ -168,7 +173,7 @@ function wpmlm_registration_page_shortcode_new() {
 
    
 
-    $arr.= '<div class="col-md-12" id="mlm-main-div">
+    $arr .= '<div class="col-md-12" id="mlm-main-div">
     
     <div class="container-1">
                     <div class="fadeIn first">
@@ -176,7 +181,7 @@ function wpmlm_registration_page_shortcode_new() {
                     </div>
     <div class="alert info submit_message1"></div>';
     if(!empty($_GET['reg_status'])){
-        $arr.=  '<div class="info-card-body row notification">
+        $arr .=  '<div class="info-card-body row notification">
             <div class="col-sm-12 pl-0 divPaddingMsg">
                 <div class="alert alert-success" role="alert">
                 '.base64_decode($_GET['reg_status']).'
@@ -184,48 +189,68 @@ function wpmlm_registration_page_shortcode_new() {
             </div>
         </div>';
     }
-    $arr.= '<div class="wpmlm-registration-form">
+    $arr .= '<div class="wpmlm-registration-form">
             <div class="info-card">
                     
                 <div class="info-card-head" style="display:none;">
-                    <h2>'. __("WP MLM User Registration","wpmlm-unilevel").'</h2>
+                    <h2>'. __("User Registration","wpmlm-unilevel").'</h2>
                     <small class="form-text text-muted">'. __("CUSTOMER INFORMATION","wpmlm-unilevel") .'</small>
                 </div>';
+                $sname = (isset($_GET['sname'])?esc_attr($_GET['sname']):'');
                 
-                $arr.= '<div class="info-card-body row">
+                
+
+                $arr .= '<div class="info-card-body row">
                     <form class="info-card-form" id="wpmlm-registration-form" method="post">';
-                    // $arr.= '<div class="col-md-6 pl-0 divPadding">
-                    //         <input type="text" name="sname" class="registerClass main_input" id="sname" value="'.$sponsor.'" placeholder="'. __('Enter Sponsor name','wpmlm-unilevel').'" required>
-                    //     </div>';
+                    if(!empty($sname)){
+                        $sponsor = base64_decode($sname);
+                        $user = get_user_by('login',$sponsor);
+                        if($user)
+                        {
+                            $results = wpmlm_get_user_details_by_id_join($user->ID);
+                            
+                            
+                        $fullName = (isset($results[0]->user_first_name)?$results[0]->user_first_name:'') . ' ' . (isset($results[0]->user_second_name)?$results[0]->user_second_name:'');
+                        $fullName = (!empty($fullName)?$fullName.'.':'');
+                        }
+                        $arr .= '<div class="col-md-12 pl-0 divPadding" style="padding: 20px; text-align: left;">
+                                <div style="font-size: 16px; font-weight: bold; width: 24%; float: left; margin: 20px; padding: 0 10px;">Sponsor Details : </div>
+                                <div style="font-size: 16px; width: 64%; float: left; margin: 20px 0;">'.$fullName.' '.$sponsor.'</div>
+                                <input style="display:none;" type="text" name="sname" class="registerClass main_input"  value="'.$sponsor.'" placeholder="'. __('Enter Sponsor name','wpmlm-unilevel').'">
+                            </div>';
+                    }
                         // <label for="sname">'. __("SPONSOR NAME","wpmlm-unilevel").':</label>
-                    if ($reg_pack_type != "with_out_package") {
+                  
+                        if ($reg_pack_type != "with_out_package") {
                             $packages = wpmlm_select_all_packages();
+                           
                         if (count($packages) > 0) {
                                 $result2 = wpmlm_get_general_information();
                             
-                $arr.=    '<div class="col-md-6 pl-0 divPadding">
+                $arr .=    $reg_pack_type.'<div class="col-md-6 pl-0 divPadding">
                                 <div class="form-group width-col-12">
                                     <select class="registerClass" name="package_select" id="package_select" required>
                                         <option value="" tabindex="1">'.__("Select Package","wpmlm-unilevel").'</option>';
                                     
                                 $results = wpmlm_select_all_packages();
                                         foreach ($results as $res) {
-                                        
-                                $arr.= '<option value="'. $res->id.'">'. $res->package_name . ' - ' . $result2->company_currency . $res->package_price.'</option>' ;
+                                    $arr .= '<option value="'. $res->id.'">'. $res->package_name . ' - ' . $result2->company_currency . $res->package_price.'</option>' ;
                                 } 
-                            $arr.= '</select>
+                            $arr .= '</select>
                                 </div>
                             </div>';
                             } 
                         }
                         
                         if ($reg_pack_type == "with_out_package") {
-                        //<label for="reg_amount">'. __("REGISTRATION AMOUNT","wpmlm-unilevel").':</label>
-                $arr.='<div class="form-group">
-                            
-                            <input type="text" name="reg_amount" class="registerClass" id="reg_amount" value="'.(isset($_SESSION["package_price"])) ? $_SESSION["package_price"] : $reg_amt . $reg_amt_currency.'" readonly required>
-                        </div>
-                        ';
+                            //<label for="reg_amount">'. __("REGISTRATION AMOUNT","wpmlm-unilevel").':</label>
+                            // $arr .= 'reg_amount<div class="form-group">
+                            // <input type="text" name="reg_amount" class="registerClass" id="reg_amount" value="" readonly required></div>';
+                            // . $reg_amt_currency
+                            $ra = (isset($_SESSION["package_price"])) ? $_SESSION["package_price"] : $reg_amt;
+                            $arr .='<div class="col-md-6 pl-0 divPadding" style="display:none;">                                
+                                            <input type="text" class="registerClass " value="'.$ra.'" name="reg_amount" id="" placeholder="'. __("reg_amount","wpmlm-unilevel").'" >           
+                                    </div>';
                         }
                     //<label for="fname">'. __("FIRST NAME","wpmlm-unilevel").':</label>
                     //<label for="lname">'. __("LAST NAME","wpmlm-unilevel").':</label>
@@ -239,72 +264,60 @@ function wpmlm_registration_page_shortcode_new() {
                     // <label for="state">'. __("STATE","wpmlm-unilevel").':</label>
                     // <label for="city">'. __("CITY","wpmlm-unilevel").':</label>
                     // <label for="zip">'. __("ZIP","wpmlm-unilevel").':</label>
-
-
-                // $arr.='<div class="col-md-6 pl-0 divPadding">
-                //             <input type="date" class="registerClass date_of_birth" name="date_of_birth" placeholder="'. __("Enter DOB","wpmlm-unilevel").'" required/>
-                //         </div>';
-                        $arr.='<div class="col-md-6 pl-0 divPadding">                                
+                    // $arr .='<div class="col-md-6 pl-0 divPadding">
+                    //             <input type="date" class="registerClass date_of_birth" name="date_of_birth" placeholder="'. __("Enter DOB","wpmlm-unilevel").'" required/>
+                    //         </div>';
+                        $arr .='<div class="col-md-6 pl-0 divPadding">                                
                                 <input type="text" class="registerClass " name="fname" id="fname" placeholder="'. __("Enter First Name","wpmlm-unilevel").'" required>           
                         </div>
                         <div class="col-md-6 pl-0 divPadding">
                                 <input type="text" class="registerClass" name="lname" id="lname" placeholder="'. __("Enter Last Name","wpmlm-unilevel").'">                            
                         </div>
-
                         <div class="col-md-6 pl-0 divPadding">
                             <input type="text" class="registerClass main_input" name="username" id="username" placeholder="'. __("Enter Username","wpmlm-unilevel").'" required>
                         </div>
-
-
                         <div class="col-md-6 pl-0 divPadding">
                             <input type="password" class="registerClass" name="password" id="password" placeholder="'. __("Enter Password","wpmlm-unilevel").'" required>
                         </div>
-
-
-
-                        <div class="col-md-6 pl-0 divPadding">
-                           
+                        <div class="col-md-6 pl-0 divPadding">                           
                                 <input type="text" class="registerClass main_input" name="email" id="email_id" placeholder="'. __("Enter Email","wpmlm-unilevel").'" required>
-                          
                         </div>
-
                         <div class="col-md-6 pl-0 divPadding">
                              <input type="text" class="registerClass" name="contact_no" id="contact_no" placeholder="'. __("Mobile Number","wpmlm-unilevel").'" required>
-                           
                         </div>';
-                        // $arr.='<div class="col-md-6 pl-0 divPadding">
+                        // $arr .='<div class="col-md-6 pl-0 divPadding">
                         //         <input type="text" class="registerClass" name="address1" id="address1" placeholder="'. __("Enter Address","wpmlm-unilevel").'" required>                            
                         // </div>';
-                        $arr.= '<div class="col-md-6 pl-0 divPadding">
+                        $arr .= '<div class="col-md-6 pl-0 divPadding">
                             
                                 
                                 <select class="registerClass" name="country" id="country" required>
                                     <option value="">'. __("Select Country","wpmlm-unilevel") .'</option>';
                                     foreach ($countries as $country) {
                                         if($country){
-                                    $arr.='<option value="'.$country->id.'">'.$country->name.'</option>'; 
+                                    $arr .='<option value="'.$country->id.'">'.$country->name.'</option>'; 
                                     }else{
-                                    $arr.='<option value="">'. __("Country not available","wpmlm-unilevel") .'</option>';
+                                    $arr .='<option value="">'. __("Country not available","wpmlm-unilevel") .'</option>';
                                         }
                                     }
                                     
-                        $arr.= '</select>
+                        $arr .= '</select>
                             
                                 
                                 
                             
                         </div>';
-                        // $arr.= '<div class="col-md-6 pl-0 divPadding">
+                        // $arr .= '<div class="col-md-6 pl-0 divPadding">
                         //         <input type="text" class="registerClass" name="state" id="state" placeholder="'. __("State","wpmlm-unilevel").'" required>
                         // </div>';
 
-                        $arr.= '<div class="col-md-6 pl-0 divPadding">
+                        $arr .= '<div class="col-md-6 pl-0 divPadding">
                                 <input type="text" class="registerClass" name="city" id="city" placeholder="'. __("City","wpmlm-unilevel").'" required>
                         </div>
                         <div class="col-md-6 pl-0 divPadding">
                                 <input type="text" class="registerClass" name="zip" id="zip" placeholder="'. __("ZIP Code","wpmlm-unilevel").'" required>
                         </div>';
-                        $arr.= '<div class="col-md-6 pl-0" style="display:none;">
+                        $arr .= '<div class="col-md-6 pl-0" style="display:none;">
                                 
                                 <br><h4>'. __("Payment Mode","wpmlm-unilevel").'</h4>';
                             
@@ -321,7 +334,7 @@ function wpmlm_registration_page_shortcode_new() {
                             
                     
                                 if ($res->reg_type == "free_join") {
-                    $arr.= '  <div class="form-check form-check-inline width-col-12">
+                    $arr .= '  <div class="form-check form-check-inline width-col-12">
                                     <input class="form-check-input free_join" type="radio" name="user_registration_type" id="user_registration_type" value="'. $res->reg_type .'" required '. $ckd .'>
                                     <label class="form-check-label" for="user_registration_type">'.  ucwords(str_replace("_", " ", $res->reg_type)).'</label>
                                 </div>';
@@ -330,18 +343,18 @@ function wpmlm_registration_page_shortcode_new() {
                                 } else {
                                 
 
-                        $arr.= '<div class="form-check form-check-inline paypal-radio width-col-12">
+                        $arr .= '<div class="form-check form-check-inline paypal-radio width-col-12">
                                     <input class="form-check-input paid_join" type="radio" name="user_registration_type" id="user_registration_type" value="paypal"  required '. $ckd. '>
                                     <label class="form-check-label" for="user_registration_type"><img src='. plugins_url() . "/" . WP_MLM_PLUGIN_NAME . "/gateway/paypal-sdk-v2/paypal.svg".'></label>
                                 </div>';
                                 } 
                             }
                         
-            $arr.= '</div>
+            $arr .= '</div>
                     <div class="row">
                         <div class="col-md-12 pl-0">
                         <div class="form-group">
-                            <button type="submit" class="resqueSubmit" id="reg_submit" name="reg_submit" value="reg_submit" >'. __("Submit","wpmlm-unilevel").'</button></div>
+                            <button type="submit" data-loading-text="Loading..." class="resqueSubmit" id="reg_submit" name="reg_submit" value="reg_submit" >'. __("Submit","wpmlm-unilevel").'</button></div>
                         </div>
                     </div>'.$wp_nonce_code.'
                     
@@ -362,8 +375,9 @@ function wpmlm_registration_page_shortcode_new() {
     <script type="text/javascript">
     jQuery(document).ready(function($) {
         $('#wpmlm-registration-form').on('submit', function(e){
-            
+            var btnn = $(this);
             var formData = new FormData(this);
+            
             formData.append('action','wpmlm_registration_page_new');
             formData.append('reg_submit','1');
 
@@ -376,10 +390,16 @@ function wpmlm_registration_page_shortcode_new() {
                         }
                     });
 
-
+                    
 
             if (isValid) {
                 console.log({formData:formData,ajaxurl:ajaxurl});
+                
+                
+                    //btnn.button("loading");
+                    $('#page-overlay').attr('class','loading'); 
+                    $('#page-overlay').css('visibility','visible'); 
+                   
                 $.ajax({
                     type: "POST",
                     url: ajaxurl,
@@ -388,12 +408,19 @@ function wpmlm_registration_page_shortcode_new() {
                     contentType: false,
                     processData: false,
                     success: function (data) {
-                        console.log(data);
                         
-                        if(data.payment_type != "free_join") {
-                            window.location.href = data.payment_link;  
-                        }else{
+                        $('#page-overlay').attr('class','loaded'); 
+                        $('#page-overlay').css('visibility','hidden'); 
+
+                        //btnn.button("reset");
+                        if(data.payment_type == "userExist") {
+                           // window.location.href = data.payment_link;  
+                            var rerr = '<div class="info-card-body row notification"><div class="col-sm-12 pl-0 divPaddingMsg"><div class="alert alert-danger" role="alert">Username already exist!</div></div></div>';
+                            $( rerr ).insertAfter( ".submit_message1" );
+                        }else if(data.payment_type == "free_join") {
                             window.location.href = data.redirect_link;
+                        }else{
+                            window.location.href = data.payment_link;  
                         }
                             
                     }
@@ -629,7 +656,7 @@ function wpmlm_registration_page_new(){
         session_start();
         $result = wpmlm_get_general_information();
         $reg_pack_type = $result->registration_type;
-        $current_user_name = $current_user->user_login;
+       // $current_user_name = $current_user->user_login;
         $reg_amt = $result->registration_amt;
         $reg_amt_currency = $result->company_currency;
 
@@ -654,10 +681,12 @@ function wpmlm_registration_page_new(){
         $user_registration_type = sanitize_text_field($_POST['user_registration_type']);
         $package_select = sanitize_text_field($_POST['package_select']);
 
-        $pkg = wpmlm_select_package_by_id($package_select);
+        
 
-        $_SESSION['package_name'] = $pkg->package_name;
         if($reg_pack_type != 'with_out_package'){
+            $pkg = wpmlm_select_package_by_id($package_select);
+
+            $_SESSION['package_name'] = $pkg->package_name;
             $_SESSION['package_price'] = $pkg->package_price;
         } else {
             $_SESSION['package_price'] = $reg_amt;
@@ -666,22 +695,34 @@ function wpmlm_registration_page_new(){
         $_SESSION['session_pkg_id'] = $package_select;
 
         /**Block for now*/
-        
-        /*$the_user = get_user_by('login', $sponsor);
-        $user_parent_id = $the_user->ID;*/
+        if(!empty($sponsor)){
+            $the_user = get_user_by('login', $sponsor);
+            $user_parent_id = $the_user->ID;
+            $user_level = wpmlm_get_user_level_by_parent_id($user_parent_id);
+        }else{
+            $user_level = 0;
+            $user_parent_id = 0;
+        }
 
         $invalid_usernames = array('admin');
         $username = sanitize_user($username);
 
-        //$user_level = wpmlm_get_user_level_by_parent_id($user_parent_id);
+        //
         // $user_ref = get_current_user_id();
         //|| email_exists( $email )
         if ( username_exists( $username )  ) {
-            return false;
-            wp_redirect($redirect_url);
+            //return false;
+            //wp_redirect($redirect_url);
+            header('Content-Type: application/json');
+                echo json_encode([
+                            // 'redirect_link' => "{$current_url}{$dash_slug}&?reg_status={$reg_msg}",
+                            'redirect_link' => "userExist",
+                            'payment_type' => 'userExist',
+                        ]);
             exit();
         }
         $user_ref = wp_create_user($username, $password, $email );
+        
         if ( $user_ref && !is_wp_error( $user_ref ) ) {
             $code = sha1( $user_ref . time() );
             $activation_link = add_query_arg( array( 'key' => $code, 'user' => $user_ref ), get_permalink( ACTIVATION_PAGE_ID ));
@@ -698,8 +739,7 @@ function wpmlm_registration_page_new(){
         $user_email = $user_info->user_email;
         $_SESSION['user_email'] = $user_email;
 
-        $user_level = 0;
-        $user_parent_id = 0;
+        
         $user_details = array(
             'user_ref_id' => $user_ref,
             'user_parent_id' => $user_parent_id,
@@ -718,7 +758,6 @@ function wpmlm_registration_page_new(){
             'join_date' => date("Y-m-d H:i:s"),
             'user_status' => 1,
             'package_id' => $_SESSION['session_pkg_id'],
-            'user_status' => 1,
         );
        
         $_SESSION['user_details'] = $user_details;
@@ -733,6 +772,7 @@ function wpmlm_registration_page_new(){
                     wpmlm_insert_leg_amount($user_ref, $_SESSION['session_pkg_id']);
                    
                 }
+                
                 $tran_pass = wpmlm_getRandTransPasscode(8);
                 $hash_tran_pass = wp_hash_password($tran_pass);
                 $tran_pass_details = array(
@@ -765,6 +805,7 @@ function wpmlm_registration_page_new(){
 						'success_mail_become_a_user_mail_sent',
 						array(
 							'bat_email'   => $user_email,
+                            'bat_user'   =>$username,
 							'bat_phone'   => '',
 							'bat_message' => 'I need become a user',
                             'activation_link' =>$activation_link
@@ -784,12 +825,24 @@ function wpmlm_registration_page_new(){
                 
                 $reg_slug_id = get_post($dash_result->user_registration); 
                 $reg_slug = $reg_slug_id->post_name;
+                if($user_level != 0){
+                    $results = wpmlm_get_user_details_by_id_join($the_user->ID);
+                    $fullName = (isset($results[0]->user_first_name)?$results[0]->user_first_name:'') . ' ' . (isset($results[0]->user_second_name)?$results[0]->user_second_name:'');
+                    $fullName = (!empty($fullName)?$fullName.'.':'');
 
-                $reg_msg = base64_encode('Registration Completed Successfully!');
+                    //$reg_msg = base64_encode('Registration Completed Successfully! Sponsors :'.$fullName.' '.$sponsor);
+                    $reg_msg = '1&sname='. base64_encode($sponsor);
+                }else{
+                    //$reg_msg = base64_encode('Registration Completed Successfully!');
+                    $reg_msg = 1;
+                }
+                
                 header('Content-Type: application/json');
+                
+                $redirect_link = "{$current_url}{$dash_slug}/?reg_status={$reg_msg}";
                 echo json_encode([
                             // 'redirect_link' => "{$current_url}{$dash_slug}&?reg_status={$reg_msg}",
-                            'redirect_link' => "{$current_url}{$dash_slug}/?reg_status={$reg_msg}",
+                            'redirect_link' => $redirect_link,
                             'payment_type' => 'free_join',
                         ]);
                 exit();
@@ -798,6 +851,7 @@ function wpmlm_registration_page_new(){
             } else {
 
                 $reg_msg = base64_encode('Sorry! Registration Failed, Please try again');
+                
                 wp_redirect($current_url .''. $reg_slug.'&?reg_failed=' . $reg_msg);
                 exit();
 
@@ -814,6 +868,7 @@ function userRegistrationMailNotification($arg){
     
     if(!empty($arg['bat_email']) && is_string($arg['bat_email'])){
         $to = $arg['bat_email'];
+        $user = $arg['bat_user'];
         
         $activation_link = $arg['activation_link'];
         $subject = esc_html('Request to become a user.','cleenday-child');
@@ -844,7 +899,7 @@ function userRegistrationMailNotification($arg){
                             <tr>
                                 <td align="center" valign="top" style="padding: 0 20px 20px 20px;">
                                     <p style="margin: 0 0 20px 0;">
-                                    '. sprintf(esc_html( 'User %s has requested to become a user at '.get_site_url(), 'Rescueincome' ),$to).'
+                                    '. sprintf(esc_html( 'User %s(%s) has requested to become a user at '.get_site_url(), 'Rescueincome' ),$user,$to).'
                                     </p>
                                     <p style="margin: 0 0 20px 0;">'.esc_html('Please click on the activation link to activate your account.','cleenday-child').'</p>
                                     <p style="margin: 0 0 20px 0;">'.esc_html('Activation Link : ','cleenday-child').' <a href="'.$activation_link.'">Click Here</a></p>';

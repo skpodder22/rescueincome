@@ -6,3 +6,49 @@
  Template:     cleenday
  Text Domain:  cleenday-child
 */
+
+.wgl-header-list-info {
+    margin: 0 !important;
+}
+
+@media only screen and (min-width: 1201px) {
+   
+ 
+ ul#menu-main li:hover,
+.current-menu-item {
+    background: #FF0712;
+}
+
+    
+}
+
+
+a {
+    word-break: break-all;
+}
+
+body:not(.home):not(.cleenday-blog-type-overlay) > header:not(.header_overlap) + #main, body.home.blog > header:not(.header_overlap) + #main {
+    border: none;
+}
+
+
+#user-profile .user-form3-edit {
+    margin: 0 0 20px;
+}
+
+.footer div.wpforms-container-full .wpforms-form label.wpforms-error {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    margin: 5px 0 0;
+    padding: 4px;
+    font-size: 11px;
+}
+
+.page-header {
+    margin-top: 0;
+}
+
+.mlm-main-div .btn.btn-primary.edit-cancel{
+    line-height: 36px;
+}

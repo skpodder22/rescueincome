@@ -792,6 +792,7 @@ function wpmlm_ajax_payment_option() {
 function wpmlm_ajax_package_settings() {
 
     $msg = '';
+    
     if (isset($_POST['package_add_nonce']) && wp_verify_nonce($_POST['package_add_nonce'], 'package_add')) {
 
         $package_name = sanitize_text_field($_POST['package_name']);
@@ -821,7 +822,7 @@ function wpmlm_ajax_package_settings() {
 
                     $msg .="__('Package name already exists','wpmlm-unilevel')";
                 } else {
-
+                    
                     $result = $wpdb->insert($table_name, $package);
                     $lastid = $wpdb->insert_id;
                     if ($result) {
@@ -834,10 +835,13 @@ function wpmlm_ajax_package_settings() {
             } else {
                 $package_id = intval($_POST['package_id']);
                 $condition = array('id' => $package_id);
+                
+
                 $wpdb->update($table_name, $package, $condition);
                 $msg = '2';
             }
             $package_settings_style = '';
+            
             if (!empty($msg)) {
                 echo nl2br($msg);
                 exit();
@@ -847,12 +851,13 @@ function wpmlm_ajax_package_settings() {
             }
         }
     } else if (isset($_POST['package_id'])) {
+        
         $package_id = intval($_POST['package_id']);
         $result = wpmlm_select_package_by_id($package_id);
         echo json_encode($result);
         exit();
     } else if (isset($_POST['package_delete_id'])) {
-
+       
         $package_id = intval($_POST['package_delete_id']);
         $result = wpmlm_delete_package_by_id($package_id);
         //to delete level commission column

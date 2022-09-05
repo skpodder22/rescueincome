@@ -44,7 +44,7 @@ $user_details = wpmlm_get_all_user_details_join();
     ?>
 
     <div class="panel-border-heading">
-        <h4><i class="fa fa-sitemap" aria-hidden="true"></i> <?php _e('Genealogy Tree','wpmlm-unilevel'); ?></h4>
+        <h4><i class="fa fa-sitemap" aria-hidden="true"></i> <?php _e('Members Tree','wpmlm-unilevel'); ?></h4>
     </div>
     <div id="unilevel-tree">
         <div class="panel-border">            

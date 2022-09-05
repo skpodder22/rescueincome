@@ -368,47 +368,54 @@ $(document).on("click", ".user-details-tab", function () {
 
 });
 
-$(document).on("click", ".report-tab", function () {
-$('.report_ul li.active').removeClass('active');
-$('.report_ul li:first-child').addClass('active');
-    default_profile_data();
-});
+        $(document).on("click", ".report-tab", function () {
+        $('.report_ul li.active').removeClass('active');
+        $('.report_ul li:first-child').addClass('active');
+            default_profile_data();
+        });
 
 
-$(document).on("click", ".ewallet-tab", function () {
+        $(document).on("click", ".ewallet-tab", function () {
 
-    $("#profile_print_area").load(location.href + " #ewallet_details_table", function () {
-        
-        if ( $.fn.dataTable.isDataTable( '#ewallet_details_table' ) ) {
-            $('#ewallet_details_table').DataTable();
-        }else{
-            $('#ewallet_details_table').DataTable();
-        }
-    });
+            $("#profile_print_area").load(location.href + " #ewallet_details_table", function () {
+                
+                if ( $.fn.dataTable.isDataTable( '#ewallet_details_table' ) ) {
+                    $('#ewallet_details_table').DataTable();
+                }else{
+                    $('#ewallet_details_table').DataTable();
+                }
+            });
 
-});
+        });
 
-$(document).on("click", ".fund_management", function () {    
-   $("#fund-management-form")[0].reset();
-   $('#fund-management-form input').removeClass('invalid');
-});
+        $(document).on("click", ".fund_management", function () {    
+        $("#fund-management-form")[0].reset();
+        $('#fund-management-form input').removeClass('invalid');
+        });
 
-$(document).on("click", ".fund-transfer", function () {    
-   $("#fund-transfer-form")[0].reset();
-   $('#fund-transfer-form input').removeClass('invalid');
-});
-$(document).on("click", ".transfer-details", function () {    
-   $("#transfer-details-form")[0].reset();   
-   $('#transfer-details-form input').removeClass('invalid');
-});
+        $(document).on("click", ".fund-transfer", function () {    
+        $("#fund-transfer-form")[0].reset();
+        $('#fund-transfer-form input').removeClass('invalid');
+        });
+        $(document).on("click", ".transfer-details", function () {    
+        $("#transfer-details-form")[0].reset();   
+        $('#transfer-details-form input').removeClass('invalid');
+        });
 
-$(document).on("click", ".ewallet-tab", function () {    
-   $('.fund_management').trigger('click');
-});
+        $(document).on("click", ".ewallet-tab", function () {    
+        $('.fund_management').trigger('click');
+        });
 
-$(document).on("click", ".ewallet-tab-user", function () {    
-   $('.ewallet-details').trigger('click');
-});
+        $(document).on("click", ".ewallet-tab-user", function () {    
+        $('.ewallet-details').trigger('click');
+        });
+
+        $(document).on("change", "#user_id_tree", function () {
+            var curntl = $('.user_idtree_selected').attr('data-url');
+            var userid = $(this).val();
+            
+            document.location.href = curntl+'&tab=tree&userid='+userid;
+        });
 
 });
 

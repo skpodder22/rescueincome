@@ -59,6 +59,13 @@ if(!empty($_GET['fepaction'])){
 </head>
 
 <body <?php body_class(); ?>>
+<!-- Start: Loading spinner --> 
+<div id="page-overlay" class="loading">
+    <span aria-hidden="true" aria-label="Loading">
+        <?php echo __('Loading ... ')?>
+    </span>
+</div> 
+<!-- End: Loading spinner --> 
 <div style="display: none;" id="logoutLink" data-url="<?php echo $logout;?>"></div>
     <?php
     wp_body_open();
